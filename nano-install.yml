@@ -1,0 +1,15 @@
+- name: Install nano text editor
+  hosts: ec2
+  become: yes
+  tasks:
+    - name: Install nano on Debian/Ubuntu
+      apt:
+        name: nano
+        state: present
+      when: ansible_os_family == 'Debian'
+
+    - name: Install nano on RedHat/CentOS
+      yum:
+        name: nano
+        state: present
+      when: ansible_os_family == 'RedHat'
