@@ -1,5 +1,5 @@
 - name: Install nano text editor
-  hosts: ec2
+  hosts: all
   become: yes
   tasks:
     - name: Install nano on Debian/Ubuntu
