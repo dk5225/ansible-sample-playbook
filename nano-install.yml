@@ -1,5 +1,6 @@
 - name: Install nano text editor
   hosts: all
+  become: yes
   remote_user: ubuntu
   tasks:
     - name: Install nano on Debian/Ubuntu
