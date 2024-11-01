@@ -1,5 +1,5 @@
 - name: Install nano text editor and deploy go-app
-  hosts: 44.206.241.217
+  hosts: all
   become: yes
   remote_user: ubuntu
   vars:
