@@ -20,7 +20,6 @@
           - git
           - golang-go
         state: present
-        update_cache: yes
 
     - name: Clone the GitHub repository
       git:
