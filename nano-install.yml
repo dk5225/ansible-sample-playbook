@@ -1,10 +1,56 @@
-- name: Install nano text editor
+- name: Install nano text editor and deploy go-app
   hosts: all
   become: yes
   remote_user: ubuntu
+  vars:
+    repo_url: "https://github.com/dk5225/simple-go-api"  # Replace with your GitHub repository URL
+    install_dir: "/opt/golang-app"  # Directory where the project will be cloned and built
+    binary_name: "simple-go-api"  # The name of the binary to build and run
+
   tasks:
     - name: Install nano on Debian/Ubuntu
       apt:
         name: nano
         state: present
       when: ansible_os_family == 'Debian'
+
+    - name: Install dependencies
+      apt:
+        name:
+          - git
+          - golang-go
+        state: present
+        update_cache: yes
+
+    - name: Clone the GitHub repository
+      git:
+        repo: "{{ repo_url }}"
+        dest: "{{ install_dir }}"
+        version: main
+        force: yes
+
+    - name: Build the Go project
+      shell: |
+        cd {{ install_dir }}
+        go build -o {{ binary_name }} .
+      args:
+        executable: /bin/bash
+
+    - name: Ensure the binary is executable
+      file:
+        path: "{{ install_dir }}/{{ binary_name }}"
+        mode: '0755'
+
+    - name: Run the Go binary
+      shell: |
+        cd {{ install_dir }}
+        nohup ./{{ binary_name }} > /var/log/{{ binary_name }}.log 2>&1 &
+      args:
+        executable: /bin/bash
+      async: 10
+      poll: 0
+
+    - name: Print binary output log location
+      debug:
+        msg: "Binary is running. Output is being logged to /var/log/{{ binary_name }}.log"
+
