@@ -1,0 +1,11 @@
+- name: Install nano text editor and deploy go-app
+  hosts: all
+  become: yes
+  remote_user: ubuntu
+
+  tasks:
+    - name: Install nano on Debian/Ubuntu
+      apt:
+        name: nano
+        state: present
+      when: ansible_os_family == 'Debian'
